@@ -1,0 +1,110 @@
+# Copyright Istio Authors
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+##################################################################################################
+# httpbin service
+##################################################################################################
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: api1
+  namespace: api-istio
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: api2
+  namespace: api-istio
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api1
+  namespace: api-istio
+  labels:
+    app: api1
+    service: api1
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app: api1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api2
+  namespace: api-istio
+  labels:
+    app: api2
+    service: api2
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  selector:
+    app: api2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api1
+  namespace: api-istio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api1
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: api1
+        version: v1
+    spec:
+      serviceAccountName: api1
+      containers:
+      - image: httpbin/yerinu:latest
+        imagePullPolicy: IfNotPresent
+        name: api1
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api2
+  namespace: api-istio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api2
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: api2
+        version: v1
+    spec:
+      serviceAccountName: api2
+      containers:
+      - image: daime/http-dump
+        imagePullPolicy: IfNotPresent
+        name: api2
+        ports:
+        - containerPort: 80
