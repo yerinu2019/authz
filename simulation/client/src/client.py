@@ -55,18 +55,18 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 Bootstrap(app)
 
-servicesDomain = "" if (os.environ.get("SERVICES_DOMAIN") is None) else "." + os.environ.get("SERVICES_DOMAIN")
-api1Hostname = "api1.api-istio.svc.cluster.local" if (os.environ.get("API1_HOSTNAME") is None) else os.environ.get("API1_HOSTNAME")
-api2Hostname = "api2.api-istio.svc.cluster.local" if (os.environ.get("API2_HOSTNAME") is None) else os.environ.get("API2_HOSTNAME")
+servicesDomain = ".api-istio.svc.cluster.local" if (os.environ.get("SERVICES_DOMAIN") is None) else "." + os.environ.get("SERVICES_DOMAIN")
+api1Hostname = "api1" if (os.environ.get("API1_HOSTNAME") is None) else os.environ.get("API1_HOSTNAME")
+api2Hostname = "api2" if (os.environ.get("API2_HOSTNAME") is None) else os.environ.get("API2_HOSTNAME")
 
 api1 = {
-    "name": "http://{0}{1}:".format(api1Hostname, servicesDomain),
+    "name": "http://{0}{1}".format(api1Hostname, servicesDomain),
     "endpoint": "api1",
     "children": []
 }
 
 api2 = {
-    "name": "http://{0}{1}:9080".format(api2Hostname, servicesDomain),
+    "name": "http://{0}{1}".format(api2Hostname, servicesDomain),
     "endpoint": "api2",
     "children": []
 }
@@ -200,7 +200,7 @@ def getForwardHeaders(request):
         'x-b3-flags',
 
         # Application-specific headers to forward.
-        'user-agent',
+        #'user-agent',
     ]
     # For Zipkin, always propagate b3 headers.
     # For Lightstep, always propagate the x-ot-span-context header.
@@ -223,35 +223,37 @@ def getForwardHeaders(request):
 def index():
     return 'call /api1 or /api2'
 
-@app.route('/api1', endpoint="api1")
-def callApi1():
+@app.route('/client1/<api_id>', endpoint="api1")
+def callApi1(api_id):
     headers = getForwardHeaders(request)
-    return callApi(api1['name'], headers)
+    return callApi(api_id+servicesDomain, api_id, headers)
 
-@app.route('/api2', endpoint="api2")
-@trace()
-def callApi2():
+@app.route('/client2/<api_id>', endpoint="api2")
+def callApi2(api_id):
     headers = getForwardHeaders(request)
-    return callApi(api2['name'], headers)
+    return callApi(api_id+servicesDomain, api_id, headers)
 
 @app.route('/health')
 def health():
     return 'Client service is healthy'
 
-def callApi(host, headers):
+def callApi(host, endpoint, headers):
     try:
-        url = host
+        url = "http://" + host + "/" + endpoint
         print("Calling " + url + " with headers: " + str(headers))
         res = requests.get(url, headers=headers, timeout=3.0)
-    except BaseException:
+    except BaseException as ex:
+        print(ex)
         res = None
+    if res is not None:
+        ex = None
     if res and res.status_code == 200:
         print("Success!!!")
-        return res.json(), 200, {'Content-Type': 'application/json'}
+        return res.text, res.status_code, {'Content-Type': str(res.headers.get('content-type'))}
     else:
         print("Failed!!!")
-        status = res.status_code if res is not None and res.status_code else 500
-        return json.dumps("Called " + url + " with headers: " + str(headers)), status, {'Content-Type': 'application/json'}
+        print(res)
+        return res.text, res.status_code, {'Content-Type': str(res.headers.get('content-type'))}
 
 class Writer(object):
     def __init__(self, filename):

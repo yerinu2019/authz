@@ -41,10 +41,10 @@ class ApplianceTest(unittest.TestCase):
             'x-b3-spanid': '40c7fdf104e3de67',
             'x-b3-sampled': '1'
         }
-        m.get("http://api1:9080", text='{}',
+        m.get("http://api1.api-istio.svc.cluster.local/api1", text='{}',
               request_headers=expected_headers)
 
-        uri = "/api1"
+        uri = "/client1/api1"
         headers = {
             'x-request-id': '34eeb41d-d267-9e49-8b84-dde403fc5b72',
             'x-b3-traceid': '40c7fdf104e3de67',
@@ -67,10 +67,10 @@ class ApplianceTest(unittest.TestCase):
             'x-b3-spanid': '40c7fdf104e3de67',
             'x-b3-sampled': '1'
         }
-        m.get("http://api2:9080", text='{}',
+        m.get("http://api2.api-istio.svc.cluster.local/api2", text='{}',
               request_headers=expected_headers)
 
-        uri = "/api2"
+        uri = "/client2/api2"
         headers = {
             'x-request-id': '34eeb41d-d267-9e49-8b84-dde403fc5b72',
             'x-b3-traceid': '40c7fdf104e3de67',

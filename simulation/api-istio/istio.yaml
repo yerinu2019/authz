@@ -41,29 +41,29 @@ spec:
     route:
     - destination:
         host: api1
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: api2
-  namespace: api-istio
-spec:
-  hosts:
-  - '*'
-  #- api1.api-istio.svc.cluster.local
-  gateways:
-  - api1-gateway
-  http:
-  - name: "api2 route"
-    match:
-    - uri:
-        prefix: /api2
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: api2
-  - match:
-    route:
-    - destination:
-        host: api2
+#---
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   name: api2
+#   namespace: api-istio
+# spec:
+#   hosts:
+#   - '*'
+#   #- api1.api-istio.svc.cluster.local
+#   gateways:
+#   - api1-gateway
+#   http:
+#   - name: "api2 route"
+#     match:
+#     - uri:
+#         prefix: /api2
+#     rewrite:
+#       uri: /
+#     route:
+#     - destination:
+#         host: api2
+#   - match:
+#     route:
+#     - destination:
+#         host: api2

@@ -32,8 +32,6 @@ spec:
     match:
     - uri:
         prefix: /client1
-    rewrite:
-      uri: /
     route:
     - destination:
         host: client1
@@ -54,8 +52,6 @@ spec:
     match:
     - uri:
         prefix: /client2
-    rewrite:
-      uri: /
     route:
     - destination:
         host: client2
