@@ -10,18 +10,30 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: api1-gateway
+  name: api-gateway
   namespace: api-istio
 spec:
   selector:
-    istio: ingressgateway # use istio default controller
+    istio: ingressgateway # Associates the Istio Ingress gateway Pod with the Gateway resource
+    #app: api-gateway
   servers:
-  - port:
+  - port:  # Instructs the load balancer to route traffic on port 443 on HTTPS to the Ingress gateway
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: ISTIO_MUTUAL  # Enable mTLS
+      credentialName: api-credential # Points to a Kubernetes Secret in security.sh, which carries TLS keys
+    hosts:
+    - '*' # instructs the load balancer to route traffic on port 443 on HTTPS to the ingress gateway for any hostname
+  - port: # Instructs the load balancer to route traffic on port 80 on HTTP to the Ingress gateway for any hostname
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - '*'
+    - "*"
+    tls:
+      httpsRedirect: true    # Redirects any HTTP traffic to the HTTPS endpoint
 
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -31,20 +43,16 @@ metadata:
   namespace: api-istio
 spec:
   hosts:
-  - '*'
+  - api.example.com  # applicable only for requests coming to the api.example.com
   gateways:
-  - api1-gateway
+  - api-gateway
   http:
   - name: "api1 route"
     match:
     - uri:
-        prefix: /api1
+        exact: /api1
     rewrite:
       uri: /
-    route:
-    - destination:
-        host: api1
-  - match:
     route:
     - destination:
         host: api1
@@ -56,9 +64,9 @@ metadata:
   namespace: api-istio
 spec:
   hosts:
-    - '*'
+    - 'api.example.com'
   gateways:
-    - api1-gateway
+    - api-gateway
   http:
     - name: "api2 route"
       match:
@@ -66,10 +74,6 @@ spec:
             prefix: /api2
       rewrite:
         uri: /
-      route:
-        - destination:
-            host: api2
-    - match:
       route:
         - destination:
             host: api2

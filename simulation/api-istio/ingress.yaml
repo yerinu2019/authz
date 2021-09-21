@@ -1,0 +1,32 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: ingress
+  namespace: api-istio
+spec:
+  profile: empty # Do not install CRDs or the control plane
+  components:
+    ingressGateways:
+      - name: ingressgateway
+        namespace: api-istio
+        enabled: true
+        label:
+          # Set a unique label for the gateway. This is required to ensure Gateways
+          # can select this workload
+          app: api-gateway
+  values:
+    gateways:
+      istio-ingressgateway:
+        # Enable gateway injection
+        injectionTemplate: gateway
+---
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: xfcc
+  namespace: api-istio
+spec:
+  meshConfig:
+    defaultConfig:
+      gatewayTopology:
+        forwardClientCertDetails: ALWAYS_FORWARD_ONLY

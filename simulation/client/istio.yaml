@@ -1,7 +1,15 @@
+apiVersion: networking.istio.io/v1beta
+kind: DestinationRule
+metadata:
+  name: outbound-mtls
+  namespace: clientns
+spec:
+  host: "*.api-istio.svc.cluster.local"
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: client1-gateway
+  name: client-gateway
   namespace: clientns
 spec:
   selector:
@@ -12,8 +20,9 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - client1.clientns.svc.cluster.local
-    - client2.clientns.svc.cluster.local
+      - '*'
+    #- client1.clientns.svc.cluster.local
+    #- client2.clientns.svc.cluster.local
 
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -23,6 +32,7 @@ metadata:
   namespace: clientns
 spec:
   hosts:
+  #- '*'
   - client1.clientns.svc.cluster.local
   gateways:
   - client1-gateway

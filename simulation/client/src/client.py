@@ -249,7 +249,7 @@ def health():
 
 def callApi(host, endpoint, headers):
     try:
-        url = "http://" + host + "/" + endpoint
+        url = "http://api.example.com/" + endpoint
         print("Calling " + url + " with headers: " + str(headers))
         res = requests.get(url, headers=headers, timeout=3.0)
     except BaseException as ex:
