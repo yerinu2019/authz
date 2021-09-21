@@ -39,7 +39,7 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: api1
 ---
@@ -55,7 +55,7 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: api2
 ---
@@ -79,11 +79,13 @@ spec:
       serviceAccountName: api1
       containers:
       - image: daime/http-dump
-      #- image: httpbin/yerinu:latest
         imagePullPolicy: IfNotPresent
         name: api1
         ports:
         - containerPort: 80
+        env:
+          - name: PORT
+            value: "80"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -109,3 +111,7 @@ spec:
         name: api2
         ports:
         - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+

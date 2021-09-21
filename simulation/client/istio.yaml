@@ -12,8 +12,8 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - '*'
-    #- api1.api-istio.svc.cluster.local
+    - client1.clientns.svc.cluster.local
+    - client2.clientns.svc.cluster.local
 
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -23,8 +23,7 @@ metadata:
   namespace: clientns
 spec:
   hosts:
-  - '*'
-  #- api1.api-istio.svc.cluster.local
+  - client1.clientns.svc.cluster.local
   gateways:
   - client1-gateway
   http:
@@ -43,8 +42,7 @@ metadata:
   namespace: clientns
 spec:
   hosts:
-  - '*'
-  #- api1.api-istio.svc.cluster.local
+  - client2.clientns.svc.cluster.local
   gateways:
   - client1-gateway
   http:
@@ -55,7 +53,3 @@ spec:
     route:
     - destination:
         host: client2
-  - match:
-    route:
-    - destination:
-        host: api2

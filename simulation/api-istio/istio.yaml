@@ -1,4 +1,13 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: api
+  namespace: api-istio
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: api1-gateway
@@ -13,7 +22,6 @@ spec:
       protocol: HTTP
     hosts:
     - '*'
-    #- api1.api-istio.svc.cluster.local
 
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -24,7 +32,6 @@ metadata:
 spec:
   hosts:
   - '*'
-  #- api1.api-istio.svc.cluster.local
   gateways:
   - api1-gateway
   http:
@@ -41,29 +48,28 @@ spec:
     route:
     - destination:
         host: api1
-#---
-# apiVersion: networking.istio.io/v1beta1
-# kind: VirtualService
-# metadata:
-#   name: api2
-#   namespace: api-istio
-# spec:
-#   hosts:
-#   - '*'
-#   #- api1.api-istio.svc.cluster.local
-#   gateways:
-#   - api1-gateway
-#   http:
-#   - name: "api2 route"
-#     match:
-#     - uri:
-#         prefix: /api2
-#     rewrite:
-#       uri: /
-#     route:
-#     - destination:
-#         host: api2
-#   - match:
-#     route:
-#     - destination:
-#         host: api2
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api2
+  namespace: api-istio
+spec:
+  hosts:
+    - '*'
+  gateways:
+    - api1-gateway
+  http:
+    - name: "api2 route"
+      match:
+        - uri:
+            prefix: /api2
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: api2
+    - match:
+      route:
+        - destination:
+            host: api2

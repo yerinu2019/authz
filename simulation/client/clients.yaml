@@ -22,7 +22,7 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 9080
+    targetPort: 80
   selector:
     app: client1
 ---
@@ -38,7 +38,7 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 9080
+    targetPort: 80
   selector:
     app: client2
 ---

@@ -223,13 +223,23 @@ def getForwardHeaders(request):
 def index():
     return 'call /api1 or /api2'
 
-@app.route('/client1/<api_id>', endpoint="api1")
-def callApi1(api_id):
+@app.route('/client1/<api_id>', endpoint="client1")
+def callClient1(api_id):
     headers = getForwardHeaders(request)
     return callApi(api_id+servicesDomain, api_id, headers)
 
-@app.route('/client2/<api_id>', endpoint="api2")
-def callApi2(api_id):
+@app.route('/client2/<api_id>', endpoint="client2")
+def callClient2(api_id):
+    headers = getForwardHeaders(request)
+    return callApi(api_id+servicesDomain, api_id, headers)
+
+@app.route('/nonistio1/<api_id>', endpoint="nonistio1")
+def callNonIstio1(api_id):
+    headers = getForwardHeaders(request)
+    return callApi(api_id+servicesDomain, api_id, headers)
+
+@app.route('/nonistio2/<api_id>', endpoint="nonistio2")
+def callNonIstio2(api_id):
     headers = getForwardHeaders(request)
     return callApi(api_id+servicesDomain, api_id, headers)
 

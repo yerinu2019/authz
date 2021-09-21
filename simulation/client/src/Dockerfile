@@ -23,8 +23,11 @@ RUN pip install --no-cache-dir -r test-requirements.txt
 COPY client.py /opt/microservices/
 COPY tests/unit/* /opt/microservices/
 
-EXPOSE 9080
+EXPOSE 80
 WORKDIR /opt/microservices
 RUN python -m unittest discover
 
-CMD ["python", "client.py", "9080"]
+RUN apt-get update; apt-get install curl -y
+
+#CMD ["curl", "--help"]
+CMD ["python", "client.py", "80"]
