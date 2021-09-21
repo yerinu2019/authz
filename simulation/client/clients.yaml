@@ -61,7 +61,7 @@ spec:
     spec:
       serviceAccountName: client1
       containers:
-      - image: client/osltest
+      - image: gcr.io/monorepotest-323514/oslclient
         imagePullPolicy: IfNotPresent
         name: client1
         ports:
@@ -86,7 +86,7 @@ spec:
     spec:
       serviceAccountName: client2
       containers:
-      - image: client/osltest
+      - image: gcr.io/monorepotest-323514/oslclient
         imagePullPolicy: IfNotPresent
         name: client2
         ports:
