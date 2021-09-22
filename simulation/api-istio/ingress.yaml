@@ -29,4 +29,4 @@ spec:
   meshConfig:
     defaultConfig:
       gatewayTopology:
-        forwardClientCertDetails: ALWAYS_FORWARD_ONLY
+        forwardClientCertDetails: APPEND_FORWARD

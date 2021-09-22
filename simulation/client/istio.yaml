@@ -1,10 +1,54 @@
-apiVersion: networking.istio.io/v1beta
+apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: outbound-mtls
   namespace: clientns
 spec:
-  host: "*.api-istio.svc.cluster.local"
+  host: "api.example.com"
+  exportTo:
+  - "."
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: api1-outbound-mtls
+  namespace: clientns
+spec:
+  host: "api1.api-istio.svc.cluster.local"
+  exportTo:
+    - "."
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: api2-outbound-mtls
+  namespace: clientns
+spec:
+  host: "api2.api-istio.svc.cluster.local"
+  exportTo:
+    - "."
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: api
+  namespace: clientns
+spec:
+  hosts:
+    - api.example.com
+  location: MESH_INTERNAL
+  addresses:
+    - 10.110.12.8
+  resolution: DNS
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -20,9 +64,10 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-      - '*'
-    #- client1.clientns.svc.cluster.local
-    #- client2.clientns.svc.cluster.local
+      - client1.example.com
+      - client2.example.com
+      - client1.clientns.svc.cluster.local
+      - client2.clientns.svc.cluster.local
 
 ---
 apiVersion: networking.istio.io/v1beta1
@@ -32,10 +77,9 @@ metadata:
   namespace: clientns
 spec:
   hosts:
-  #- '*'
-  - client1.clientns.svc.cluster.local
+  - client1.example.com
   gateways:
-  - client1-gateway
+  - client-gateway
   http:
   - name: "client1 route"
     match:
@@ -52,9 +96,9 @@ metadata:
   namespace: clientns
 spec:
   hosts:
-  - client2.clientns.svc.cluster.local
+  - client2.example.com
   gateways:
-  - client1-gateway
+  - client-gateway
   http:
   - name: "client2 route"
     match:

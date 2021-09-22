@@ -92,10 +92,33 @@ spec:
           ports:
             - containerPort: 80
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: outbound-mtls
+  namespace: clientns
+spec:
+  host: "api.example.com"
+  exportTo:
+    - "."
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: api
+  namespace: clientns
+spec:
+  hosts:
+    - api.example.com
+  location: MESH_INTERNAL
+  addresses:
+    - 10.110.12.8
+  resolution: DNS
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: nonistio1-gateway
+  name: nonistio-gateway
   namespace: nonistio
 spec:
   selector:
@@ -106,8 +129,11 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - '*'
-      #- api1.api-istio.svc.cluster.local
+        - nonistio1.example.com
+        - nonistio2.example.com
+        - nonistio1.nonistio.svc.cluster.local
+        - nonistio2.nonistio.svc.cluster.local
+
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -116,14 +142,16 @@ metadata:
   namespace: nonistio
 spec:
   hosts:
-    - '*'
+    - nonistio1.example.com
   gateways:
-    - nonistio1-gateway
+    - nonistio-gateway
   http:
-    - name: "client1 route"
+    - name: "nonistio1 route"
       match:
         - uri:
             prefix: /nonistio1
+        - uri:
+            exact: /
       route:
         - destination:
             host: nonistio1
@@ -135,11 +163,11 @@ metadata:
   namespace: nonistio
 spec:
   hosts:
-    - '*'
+    - nonistio2.example.com
   gateways:
-    - nonistio1-gateway
+    - nonistio-gateway
   http:
-    - name: "client2 route"
+    - name: "nonistio2 route"
       match:
         - uri:
             prefix: /nonistio2

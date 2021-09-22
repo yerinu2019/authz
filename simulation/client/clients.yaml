@@ -65,7 +65,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: client1
         ports:
-        - containerPort: 9080
+        - containerPort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -90,4 +90,4 @@ spec:
         imagePullPolicy: IfNotPresent
         name: client2
         ports:
-        - containerPort: 9080
+        - containerPort: 80

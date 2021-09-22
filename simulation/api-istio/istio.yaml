@@ -25,16 +25,40 @@ spec:
       mode: ISTIO_MUTUAL  # Enable mTLS
       credentialName: api-credential # Points to a Kubernetes Secret in security.sh, which carries TLS keys
     hosts:
-    - '*' # instructs the load balancer to route traffic on port 443 on HTTPS to the ingress gateway for any hostname
+    - api.example.com
   - port: # Instructs the load balancer to route traffic on port 80 on HTTP to the Ingress gateway for any hostname
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - "*"
-    tls:
-      httpsRedirect: true    # Redirects any HTTP traffic to the HTTPS endpoint
+    - api.example.com
+#    tls:
+#      httpsRedirect: true    # Redirects any HTTP traffic to the HTTPS endpoint
 
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api
+  namespace: api-istio
+spec:
+  hosts:
+  - api.example.com
+  gateways:
+  - api-gateway
+  http:
+    - name: api1
+      match:
+        - uri:
+            prefix: "/api1"
+      delegate:
+        name: api1
+    - name: api2
+      match:
+        - uri:
+            prefix: "/api2"
+      delegate:
+        name: api2
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -42,20 +66,12 @@ metadata:
   name: api1
   namespace: api-istio
 spec:
-  hosts:
-  - api.example.com  # applicable only for requests coming to the api.example.com
-  gateways:
-  - api-gateway
   http:
-  - name: "api1 route"
-    match:
-    - uri:
-        exact: /api1
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: api1
+    - rewrite:
+        uri: /
+      route:
+        - destination:
+            host: api1.api-istio.svc.cluster.local
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -63,17 +79,9 @@ metadata:
   name: api2
   namespace: api-istio
 spec:
-  hosts:
-    - 'api.example.com'
-  gateways:
-    - api-gateway
   http:
-    - name: "api2 route"
-      match:
-        - uri:
-            prefix: /api2
-      rewrite:
+    - rewrite:
         uri: /
       route:
         - destination:
-            host: api2
+            host: api2.api-istio.svc.cluster.local

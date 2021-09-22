@@ -67,8 +67,10 @@ class ApplianceTest(unittest.TestCase):
             'x-b3-spanid': '40c7fdf104e3de67',
             'x-b3-sampled': '1'
         }
-        m.get("http://api.example.com/api2", text='{}',
-              request_headers=expected_headers)
+        m.get("http://api2.api-istio.svc.cluster.local/api1", text='{}',
+                      request_headers=expected_headers)
+        #m.get("http://api.example.com/api2", text='{}',
+        #      request_headers=expected_headers)
 
         uri = "/client2/api2"
         headers = {
