@@ -217,3 +217,7 @@ kubectl --context client kubectl create ns nonistio
 echo "Enable Istio on coient and api namespace"
 kubectl --context client label namespace clientns istio-injection=enabled
 kubectl --context api label namespace api-istio istio-injection=enabled
+
+echo "Install api"
+cd ~/src/authz/simulation/multi-cluster/multi-network
+kubectl --context api kubectl apply -f api.yaml
