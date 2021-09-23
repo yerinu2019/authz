@@ -21,7 +21,7 @@ kubectl create clusterrolebinding user-admin-binding \
 echo "download Istio"
 cd ${WORKDIR}
 export ISTIO_VERSION=1.11.2
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} TARGET_ARCH=x86_64 sh -
+#curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} TARGET_ARCH=x86_64 sh -
 cd istio-${ISTIO_VERSION}
 export PATH=$PWD/bin:$PATH
 
@@ -37,7 +37,7 @@ do
   done
 
 echo "set the default network for the client cluster"
-kubectl --context=client label namespace istio-system topology.istio.io/network=network1
+kubectl --context=client label namespace istio-system topology.istio.io/network=client-network
 
 echo "Create the Istio configuration for the client cluster with a dedicated east-west gateway"
 cd ${WORKDIR}

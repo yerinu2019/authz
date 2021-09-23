@@ -1,12 +1,12 @@
 echo "Download the required files"
 cd $HOME
-git clone https://github.com/GoogleCloudPlatform/istio-multicluster-gke.git
+# git clone https://github.com/GoogleCloudPlatform/istio-multicluster-gke.git
 
 cd $HOME/istio-multicluster-gke
 WORKDIR=$(pwd)
 
 echo "Install kubectx/kubens"
-git clone https://github.com/ahmetb/kubectx $WORKDIR/kubectx
+#git clone https://github.com/ahmetb/kubectx $WORKDIR/kubectx
 export PATH=$PATH:$WORKDIR/kubectx
 
 echo "create the VPCs:"
