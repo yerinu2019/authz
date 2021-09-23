@@ -50,14 +50,14 @@ spec:
       meshID: mesh1
       multiCluster:
         clusterName: client
-      network: network1
+      network: client-network
   components:
     ingressGateways:
       - name: istio-eastwestgateway
         label:
           istio: eastwestgateway
           app: istio-eastwestgateway
-          topology.istio.io/network: network1
+          topology.istio.io/network: client-network
         enabled: true
         k8s:
           env:
@@ -66,7 +66,7 @@ spec:
               value: "sni-dnat"
             # traffic through this gateway should be routed inside the network
             - name: ISTIO_META_REQUESTED_NETWORK_VIEW
-              value: network1
+              value: client-network
           service:
             ports:
               - name: status-port
@@ -97,7 +97,7 @@ kubectl --context=client apply -n istio-system -f \
 ${WORKDIR}/istio-${ISTIO_VERSION}/samples/multicluster/expose-services.yaml
 
 echo "Set the default network for the api cluster"
-kubectl --context=api label namespace istio-system topology.istio.io/network=network2
+kubectl --context=api label namespace istio-system topology.istio.io/network=api-network
 
 echo "Create the Istio configuration for the api cluster with a dedicated east-west gateway"
 cd ${WORKDIR}
@@ -110,14 +110,14 @@ spec:
       meshID: mesh1
       multiCluster:
         clusterName: api
-      network: network2
+      network: api-network
   components:
     ingressGateways:
       - name: istio-eastwestgateway
         label:
           istio: eastwestgateway
           app: istio-eastwestgateway
-          topology.istio.io/network: network2
+          topology.istio.io/network: api-network
         enabled: true
         k8s:
           env:
@@ -126,7 +126,7 @@ spec:
               value: "sni-dnat"
             # traffic through this gateway should be routed inside the network
             - name: ISTIO_META_REQUESTED_NETWORK_VIEW
-              value: network2
+              value: api-network
           service:
             ports:
               - name: status-port
@@ -180,3 +180,8 @@ kubectl --context api label namespace api-istio istio-injection=enabled
 echo "Install api"
 cd ~/src/authz/simulation/multi-cluster/multi-network
 kubectl --context api apply -f api.yaml
+kubectl --context api apply -n api-istio -f istio.yaml
+
+echo "Install client"
+kubectl --context client apply -f client.yaml
+kubectl --context client -n clientns apply -f api.yaml

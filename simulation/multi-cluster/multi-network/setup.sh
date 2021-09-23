@@ -10,8 +10,8 @@ git clone https://github.com/ahmetb/kubectx $WORKDIR/kubectx
 export PATH=$PATH:$WORKDIR/kubectx
 
 echo "create the VPCs:"
-#gcloud compute networks create vpc-west --subnet-mode=auto
-#gcloud compute networks create vpc-central --subnet-mode=auto
+gcloud compute networks create vpc-client --subnet-mode=auto
+gcloud compute networks create vpc-api --subnet-mode=auto
 
 echo "Set the KUBECONFIG variable to use a new kubeconfig file"
 export KUBECONFIG=${WORKDIR}/istio-kubeconfig
@@ -26,7 +26,7 @@ gcloud container clusters create client --zone us-west2-a \
 "https://www.googleapis.com/auth/servicecontrol",\
 "https://www.googleapis.com/auth/service.management.readonly",\
 "https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-west" --async
+    --num-nodes "1" --network "vpc-client" --async
 
 gcloud container clusters create api --zone us-central1-a \
     --machine-type "e2-standard-2" --disk-size "50" \
@@ -37,6 +37,6 @@ gcloud container clusters create api --zone us-central1-a \
 "https://www.googleapis.com/auth/servicecontrol",\
 "https://www.googleapis.com/auth/service.management.readonly",\
 "https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-central"
+    --num-nodes "1" --network "vpc-api"
 
 ~/src/authz/simulation/multi-cluster/multi-network/setup2.sh
