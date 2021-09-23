@@ -179,4 +179,4 @@ kubectl --context api label namespace api-istio istio-injection=enabled
 
 echo "Install api"
 cd ~/src/authz/simulation/multi-cluster/multi-network
-kubectl --context api kubectl apply -f api.yaml
+kubectl --context api apply -f api.yaml
