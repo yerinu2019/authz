@@ -26,7 +26,7 @@ gcloud container clusters create client --zone us-west2-a \
 "https://www.googleapis.com/auth/servicecontrol",\
 "https://www.googleapis.com/auth/service.management.readonly",\
 "https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-west" --async
+    --num-nodes "4" --network "vpc-west" --async
 
 gcloud container clusters create api --zone us-central1-a \
     --machine-type "e2-standard-2" --disk-size "50" \
@@ -37,6 +37,6 @@ gcloud container clusters create api --zone us-central1-a \
 "https://www.googleapis.com/auth/servicecontrol",\
 "https://www.googleapis.com/auth/service.management.readonly",\
 "https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-central"
+    --num-nodes "4" --network "vpc-central"
 
 ~/src/authz/simulation/multi-cluster/multi-network/setup2.sh
