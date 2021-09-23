@@ -169,9 +169,9 @@ istioctl x create-remote-secret \
 kubectl apply -f - --context=api
 
 echo "Create client and api namespace"
-kubectl --context client kubectl create ns clientns
-kubectl --context api kubectl create ns api-istio
-kubectl --context client kubectl create ns nonistio
+kubectl --context client create ns clientns
+kubectl --context api  create ns api-istio
+kubectl --context client  create ns nonistio
 
 echo "Enable Istio on coient and api namespace"
 kubectl --context client label namespace clientns istio-injection=enabled
