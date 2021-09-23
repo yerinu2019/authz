@@ -184,4 +184,4 @@ kubectl --context api apply -n api-istio -f istio.yaml
 
 echo "Install client"
 kubectl --context client apply -f client.yaml
-kubectl --context client -n clientns apply -f api.yaml
+kubectl --context client -n clientns apply -f istio.yaml
