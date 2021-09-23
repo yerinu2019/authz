@@ -44,8 +44,8 @@ gcloud container clusters list
 
 echo "Connect to both clusters to generate entries in the kubeconfig file"
 export PROJECT_ID=$(gcloud info --format='value(config.project)')
-gcloud container clusters get-credentials west --zone us-west2-a --project ${PROJECT_ID}
-gcloud container clusters get-credentials central --zone us-central1-a --project ${PROJECT_ID}
+gcloud container clusters get-credentials client --zone us-west2-a --project ${PROJECT_ID}
+gcloud container clusters get-credentials api --zone us-central1-a --project ${PROJECT_ID}
 
 echo "Use kubectx to rename the context names for convenience"
 kubectx client=gke_${PROJECT_ID}_us-west2-a_client
