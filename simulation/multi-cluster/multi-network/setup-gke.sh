@@ -30,7 +30,7 @@ gcloud container clusters create client --zone us-west2-a \
 "https://www.googleapis.com/auth/servicecontrol",\
 "https://www.googleapis.com/auth/service.management.readonly",\
 "https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-client"
+    --num-nodes "1" --network "vpc-client" --async
 
 echo "Creating api GKE..."
 gcloud container clusters create api --zone us-central1-a \

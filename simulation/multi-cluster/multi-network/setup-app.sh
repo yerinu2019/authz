@@ -1,11 +1,15 @@
-echo "Create client and api namespace"
-kubectl --context client delete ns clientns
+#!/bin/bash
+
+echo "Deleting client namespace...Ignore error"
+kubectl --context client delete ns clientns --ignore-not-found=true
 kubectl --context client create ns clientns
 # real api-istio namespace on api cluster
-kubectl --context api  delete ns api-istio
+echo "Deleting api namespace...Ignore error"
+kubectl --context api  delete ns api-istio --ignore-not-found=true
 kubectl --context api  create ns api-istio
 # stub api-istio namespace on client cluster
-kubectl --context client delete ns nonistio
+echo "Deleting nonistio namespace...Ignore error"
+kubectl --context client delete ns nonistio --ignore-not-found=true
 kubectl --context client create ns nonistio
 
 echo "Enable Istio on clientns and api-istio namespace"
@@ -14,7 +18,7 @@ kubectl --context api label namespace api-istio istio-injection=enabled
 
 echo "Install api"
 cd $SCRIPT_DIR
-./setup-api.sh
+. $SCRIPT_DIR/setup-api.sh
 #kubectl --context api apply -n api-istio -f istio.yaml
 
 echo "Install client"
