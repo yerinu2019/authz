@@ -12,14 +12,15 @@ export PATH=$PATH:$WORKDIR/kubectx
 
 $SCRIPT_DIR/cleanup-gke.sh
 
-echo "create the VPCs:"
+echo "creating client VPC..."
 gcloud compute networks create vpc-client --subnet-mode=auto
+echo "creating api VPC..."
 gcloud compute networks create vpc-api --subnet-mode=auto
 
 echo "Set the KUBECONFIG variable to use a new kubeconfig file"
 export KUBECONFIG=${WORKDIR}/istio-kubeconfig
 
-echo "Create two GKE clusters"
+echo "Creating client GKE..."
 gcloud container clusters create client --zone us-west2-a \
     --machine-type "e2-standard-2" --disk-size "50" \
     --scopes "https://www.googleapis.com/auth/compute",\
@@ -29,8 +30,9 @@ gcloud container clusters create client --zone us-west2-a \
 "https://www.googleapis.com/auth/servicecontrol",\
 "https://www.googleapis.com/auth/service.management.readonly",\
 "https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-client" --async
+    --num-nodes "1" --network "vpc-client"
 
+echo "Creating api GKE..."
 gcloud container clusters create api --zone us-central1-a \
     --machine-type "e2-standard-2" --disk-size "50" \
     --scopes "https://www.googleapis.com/auth/compute",\
