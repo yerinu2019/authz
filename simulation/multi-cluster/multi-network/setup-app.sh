@@ -1,4 +1,5 @@
 #!/bin/bash
+export SCRIPT_DIR=`pwd`
 
 echo "Deleting client namespace...Ignore error"
 kubectl --context client delete ns clientns --ignore-not-found=true
