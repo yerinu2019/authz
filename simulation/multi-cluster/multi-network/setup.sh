@@ -1,43 +1,14 @@
-echo "Download the required files"
-cd $HOME
-# git clone https://github.com/GoogleCloudPlatform/istio-multicluster-gke.git
+export SCRIPT_DIR=`pwd`
+#export PATH=$PATH:$SCRIPT_DIR
+$SCRIPT_DIR/setup-gke.sh
+echo "GKE setup completed"
 
-cd $HOME/istio-multicluster-gke
-WORKDIR=$(pwd)
+cd $SCRIPT_DIR
+$SCRIPT_DIR/setup-istio.sh
+echo "Istio setup completed"
 
-echo "Install kubectx/kubens"
-#git clone https://github.com/ahmetb/kubectx $WORKDIR/kubectx
-export PATH=$PATH:$WORKDIR/kubectx
+$SCRIPT_DIR/setup-app.sh
+echo "Application setup completed"
 
-echo "create the VPCs:"
-gcloud compute networks create vpc-client --subnet-mode=auto
-gcloud compute networks create vpc-api --subnet-mode=auto
-
-echo "Set the KUBECONFIG variable to use a new kubeconfig file"
-export KUBECONFIG=${WORKDIR}/istio-kubeconfig
-
-echo "Create two GKE clusters"
-gcloud container clusters create client --zone us-west2-a \
-    --machine-type "e2-standard-2" --disk-size "50" \
-    --scopes "https://www.googleapis.com/auth/compute",\
-"https://www.googleapis.com/auth/devstorage.read_only",\
-"https://www.googleapis.com/auth/logging.write",\
-"https://www.googleapis.com/auth/monitoring",\
-"https://www.googleapis.com/auth/servicecontrol",\
-"https://www.googleapis.com/auth/service.management.readonly",\
-"https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-client" --async
-
-gcloud container clusters create api --zone us-central1-a \
-    --machine-type "e2-standard-2" --disk-size "50" \
-    --scopes "https://www.googleapis.com/auth/compute",\
-"https://www.googleapis.com/auth/devstorage.read_only",\
-"https://www.googleapis.com/auth/logging.write",\
-"https://www.googleapis.com/auth/monitoring",\
-"https://www.googleapis.com/auth/servicecontrol",\
-"https://www.googleapis.com/auth/service.management.readonly",\
-"https://www.googleapis.com/auth/trace.append" \
-    --num-nodes "1" --network "vpc-api"
-
-cd ~/src/authz/simulation/multi-cluster/multi-network
-./setup2.sh
+$SCRIPT_DIR/monitor.sh
+echo "Monitor setup completed"
