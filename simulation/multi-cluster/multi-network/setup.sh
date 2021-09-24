@@ -39,4 +39,5 @@ gcloud container clusters create api --zone us-central1-a \
 "https://www.googleapis.com/auth/trace.append" \
     --num-nodes "1" --network "vpc-api"
 
-~/src/authz/simulation/multi-cluster/multi-network/setup2.sh
+cd ~/src/authz/simulation/multi-cluster/multi-network
+./setup2.sh

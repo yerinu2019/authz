@@ -168,20 +168,4 @@ istioctl x create-remote-secret \
 --name=client | \
 kubectl apply -f - --context=api
 
-echo "Create client and api namespace"
-kubectl --context client create ns clientns
-kubectl --context api  create ns api-istio
-kubectl --context client  create ns nonistio
-
-echo "Enable Istio on coient and api namespace"
-kubectl --context client label namespace clientns istio-injection=enabled
-kubectl --context api label namespace api-istio istio-injection=enabled
-
-echo "Install api"
-cd ~/src/authz/simulation/multi-cluster/multi-network
-kubectl --context api apply -f api.yaml
-kubectl --context api apply -n api-istio -f istio.yaml
-
-echo "Install client"
-kubectl --context client apply -f client.yaml
-kubectl --context client -n clientns apply -f istio.yaml
+./setup-app.sh
