@@ -4,4 +4,4 @@
 # $5: called api service
 POD=`kubectl --context $1 -n $2 get pod -l app=$3 -o jsonpath='{.items..metadata.name}'`
 echo $POD
-kubectl --context $1 -n $2 exec $POD -- curl -s $4
+kubectl --context $1 -n $2 exec $POD -- curl -sS $4
