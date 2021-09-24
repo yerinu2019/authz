@@ -46,7 +46,7 @@ spec:
 EOF
 
 echo "Apply the configuration to the client cluster"
-istioctl install --context=client -f istio-client.yaml
+istioctl install --context=client -y -f istio-client.yaml
 
 echo "Inspect the deployments in the istio-system namespace"
 kubectl --context=client -n istio-system get deployments

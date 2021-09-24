@@ -46,7 +46,7 @@ spec:
 EOF
 
 echo "Apply the configuration to the api cluster"
-istioctl install --context=api -f istio-api.yaml
+istioctl install --context=api -y -f istio-api.yaml
 
 echo "Inspect the deployments in the istio-system namespace."
 kubectl --context=api -n istio-system get deployments
