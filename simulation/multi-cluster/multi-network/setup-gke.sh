@@ -1,4 +1,4 @@
-echo "Download the required files"
+echo "Delete and download istio-multicluster-gke.git"
 cd $HOME
 rm -rf istio-multicluster-gke
 git clone https://github.com/GoogleCloudPlatform/istio-multicluster-gke.git
@@ -10,7 +10,7 @@ echo "Install kubectx/kubens"
 git clone https://github.com/ahmetb/kubectx $WORKDIR/kubectx
 export PATH=$PATH:$WORKDIR/kubectx
 
-./cleanup-gke.sh
+$SCRIPT_DIR/cleanup-gke.sh
 
 echo "create the VPCs:"
 gcloud compute networks create vpc-client --subnet-mode=auto
