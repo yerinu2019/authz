@@ -20,11 +20,9 @@ kubectl --context api label namespace api-istio istio-injection=enabled
 echo "Install api"
 cd $SCRIPT_DIR
 . $SCRIPT_DIR/setup-api.sh
-#kubectl --context api apply -n api-istio -f istio.yaml
 
 echo "Install client"
 kubectl --context client -n clientns apply -f $SCRIPT_DIR/client.yaml
-#kubectl --context client -n clientns apply -f istio.yaml
 
 echo "Install nonistio client"
 kubectl --context client -n nonistio apply -f $SCRIPT_DIR/client.yaml
