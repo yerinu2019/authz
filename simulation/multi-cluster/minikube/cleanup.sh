@@ -1,2 +1,0 @@
-./stop.sh
-./delete.sh

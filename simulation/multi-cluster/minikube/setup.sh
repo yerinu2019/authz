@@ -1,5 +1,7 @@
-#kube.sh
-#cert.sh
+#!/bin/bash
+export SCRIPT_DIR=`pwd`
+$SCRIPT_DIR/setup-minikube.sh
+
 
 echo "Add Kiali environment"
 KIALI_USERNAME=$(read -p 'Kiali Username: ' uval && echo -n $uval | base64)

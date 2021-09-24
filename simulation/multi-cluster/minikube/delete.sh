@@ -1,2 +1,2 @@
-minikube delete --profile cluster1
-minikube delete --profile cluster2
+minikube delete --profile client
+minikube delete --profile api
