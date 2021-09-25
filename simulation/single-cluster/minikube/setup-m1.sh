@@ -1,7 +1,7 @@
 #!/bin/bash
 export SCRIPT_DIR=`pwd`
 
-. $SCRIPT_DIR/install-minikube-mac.sh
+. $SCRIPT_DIR/install-minikube-m1.sh
 . $SCRIPT_DIR/setup-minikube.sh
 echo "Minikube setup completed"
 . $SCRIPT_DIR/setup-istio.sh
