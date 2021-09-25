@@ -21,4 +21,4 @@ cd istio-${ISTIO_VERSION}
 export PATH=$PWD/bin:$PATH
 
 echo "Apply the configuration to the client cluster"
-istioctl install -y
+istioctl install --set profile=demo -y
