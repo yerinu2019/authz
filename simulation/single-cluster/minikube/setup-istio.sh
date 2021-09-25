@@ -20,13 +20,5 @@ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} TARGET_A
 cd istio-${ISTIO_VERSION}
 export PATH=$PWD/bin:$PATH
 
-echo "create the secret by using the appropriate certificate files"
-kubectl create namespace istio-system
-kubectl create secret generic cacerts -n istio-system \
-  --from-file=${WORKDIR}/istio-${ISTIO_VERSION}/samples/certs/ca-cert.pem \
-  --from-file=${WORKDIR}/istio-${ISTIO_VERSION}/samples/certs/ca-key.pem \
-  --from-file=${WORKDIR}/istio-${ISTIO_VERSION}/samples/certs/root-cert.pem \
-  --from-file=${WORKDIR}/istio-${ISTIO_VERSION}/samples/certs/cert-chain.pem;
-
 echo "Apply the configuration to the client cluster"
 istioctl install -y
