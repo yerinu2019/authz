@@ -1,0 +1,31 @@
+apiVersion: "graphql.usbank.com/v1alpha"
+kind: AccessPolicy
+metadata:
+  name: access-policy-1
+  labels:
+    api-id: api1
+spec:
+  api_id: "api1"
+  acls:
+  - kind: API
+    whitelist:
+    - client1
+    - client2
+    - client3
+    blacklist:
+    - client4
+  - kind: QUERY
+    whitelist:
+    - client1
+    - client2
+  - kind: MUTATE
+    whitelist:
+    - client1
+  - kind: FIELD_GROUP
+    name: fieldgroup1
+    fields:
+    - field1
+    - field2
+    whitelist:
+    - client1
+    - client2

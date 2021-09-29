@@ -1,0 +1,15 @@
+apiVersion: "graphql.usbank.com/v1alpha"
+kind: AccessPolicy
+metadata:
+  name: access-policy-1
+  namespace: api-istio
+  labels:
+    api-id: api1
+spec:
+  api_id: "api1"
+  acls:
+  - kind: API
+    whitelist:
+    - client1
+    - client2
+    - client3
