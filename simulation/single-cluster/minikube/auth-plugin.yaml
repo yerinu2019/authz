@@ -163,10 +163,11 @@ data:
     package istio
 
     inject = {
-      "apiVersion": "admission.k8s.io/v1beta1",
+      "apiVersion": "admission.k8s.io/v1",
       "kind": "AdmissionReview",
       "response": {
         "allowed": true,
+        "uid" : input.request.uid,
         "patchType": "JSONPatch",
         "patch": base64.encode(json.marshal(patch)),
       },
@@ -187,7 +188,7 @@ data:
     }]
 
     opa_container = {
-      "image": "yerinu2019/test-auth-plugin:latest",
+      "image": "yerinu2019/test-auth-plugin:latest-istio",
       "name": "opa-istio",
       "args": [
         "run",
@@ -267,7 +268,7 @@ spec:
       name: admission-controller
     spec:
       containers:
-        - image: "yerinu2019/test-auth-plugin:latest"
+        - image: "yerinu2019/test-auth-plugin:latest-istio"
           name: opa
           ports:
           - containerPort: 443
@@ -365,6 +366,6 @@ webhooks:
       matchLabels:
         opa-istio-injection: enabled
     failurePolicy: Fail
-    admissionReviewVersions: ["v1"]
+    admissionReviewVersions: ["v1", "v1beta1"]
     sideEffects: NoneOnDryRun
     timeoutSeconds: 5

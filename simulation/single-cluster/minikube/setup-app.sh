@@ -14,7 +14,8 @@ kubectl delete ns nonistio --ignore-not-found=true
 kubectl create ns nonistio
 
 echo "Enable opa istio on api-istio namespace"
-kubectl label namespace api-istio opa-istio-injection="enabled"
+cd $SCRIPT_DIR
+. $SCRIPT_DIR/setup-opa.sh
 
 echo "Enable Istio on clientns and api-istio namespace"
 kubectl label namespace clientns istio-injection=enabled
