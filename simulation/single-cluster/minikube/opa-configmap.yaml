@@ -49,14 +49,12 @@ data:
     allow = response {
         response := {
           "allowed": checkXfcc,
-          "body": "Hello World!!!",
         }
     }
 
     deny = response {	    
         response := {
         "allowed": checkXfcc,
-        "body": "Hello World!!!",
         }
     }
 
