@@ -1,10 +1,16 @@
 #!/bin/bash
+echo "Make sure that the minikube ingress addon is enabled"
+minikube addons enable ingress
 
 echo "Enable opa istio on api-istio namespace"
 kubectl label namespace api-istio opa-istio-injection="enabled"
 
 echo "Delete opa-istio namespece"
 kubectl delete namespace opa-istio
+kubectl create namespace opa-istio
+
+echo "Install OPA envoy filter"
+kubectl -n istio-system apply -f opa-envoy-filter.yaml
 
 echo "Install OPA-Envoy"
 kubectl apply -f auth-plugin.yaml
