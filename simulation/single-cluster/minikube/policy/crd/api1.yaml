@@ -1,7 +1,7 @@
-apiVersion: "graphql.usbank.com/v1alpha"
-kind: AccessPolicy
+apiVersion: "example.com/v1alpha1"
+kind: GraphqlPolicy
 metadata:
-  name: access-policy-1
+  name: api1
   namespace: api-istio
   labels:
     api-id: api1

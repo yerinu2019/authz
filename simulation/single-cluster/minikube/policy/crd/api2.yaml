@@ -1,11 +1,11 @@
-apiVersion: "graphql.usbank.com/v1alpha"
-kind: AccessPolicy
+apiVersion: "example.com/v1alpha1"
+kind: GraphqlPolicy
 metadata:
-  name: access-policy-1
+  name: api2
   labels:
-    api-id: api1
+    api-id: api2
 spec:
-  api_id: "api1"
+  api_id: "api2"
   acls:
   - kind: API
     whitelist:
