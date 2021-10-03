@@ -3,4 +3,4 @@
 echo "build"
 opa build -b .
 echo "upload"
-gsutil cp bundle.tar.gz gs://test-opa-policy-bundles
+gsutil cp -p bundle.tar.gz gs://test-opa-policy-bundles

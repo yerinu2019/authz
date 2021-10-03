@@ -14,7 +14,7 @@ data:
       istio/authz:
         service: gcs
         resource: bundle.tar.gz
-        persist: true
+        persist: false
     plugins:
       envoy_ext_authz_grpc:
         addr: :9191
