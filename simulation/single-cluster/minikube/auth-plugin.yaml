@@ -130,6 +130,10 @@ data:
       "value": opa_container,
     }, {
       "op": "add",
+      "path": "/spec/containers/-",
+      "value": kubemgmt_container,
+    }, {
+      "op": "add",
       "path": "/spec/volumes/-",
       "value": opa_config_volume,
     }, {
@@ -137,6 +141,14 @@ data:
       "path": "/spec/volumes/-",
       "value": opa_policy_volume,
     }]
+
+    kubemgmt_container = {
+      "name": "kube-mgmt",
+      "image": "openpolicyagent/kube-mgmt:0.11",
+      "args": [
+          "--replicate=example.com/v1alpha1/graphqlpolicies"
+      ],
+    }
 
     opa_container = {
       "image": "yerinu2019/test-auth-plugin:latest-istio",
