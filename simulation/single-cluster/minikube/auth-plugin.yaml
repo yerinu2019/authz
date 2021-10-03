@@ -147,7 +147,6 @@ data:
         "--config-file=/config/config.yaml",
         "--addr=localhost:8181",
         "--diagnostic-addr=0.0.0.0:8282",
-        "/policy/policy.rego",
       ],
       "volumeMounts": [{
         "mountPath": "/config",
@@ -177,7 +176,6 @@ data:
 
     opa_policy_volume = {
       "name": "opa-policy",
-      "configMap": {"name": "opa-policy"},
     }
 ---
 ############################################################
