@@ -5,13 +5,6 @@ import input.attributes.source
 import input.parsed_path
 import data.kubernetes.graphqlpolicies
 
-#default allow[resp] =  {
-#		  "allowed": false,
-#		  "headers": {"KEY1", "VALUE1"},
-#		  "body": "Body from default",
-#		  "http_status": 403
-#		}
-#success := true
 success := {
     "allowed": true,
     "headers": {"X-Hello": "World"},
@@ -19,10 +12,10 @@ success := {
     "http_status": 200
 }
 
+# Allow health check
 allow = success {
    healthCheck
 }
-
 healthCheck {
     parsed_path[0] == "health"
     http_request.method == "GET"
@@ -32,30 +25,19 @@ healthCheck {
     http_request.method == "GET"
 }
 
-debug := {
-    "allowed": true,
-    "headers": {"X-Policies": sprintf("%s", [data.kubernetes.graphqlpolicies]),
-       "X-inputapi": substring(http_request.host, 0, indexof(http_request.host, ".")),
-       "X-Api1-Policy": data.kubernetes.graphqlpolicies["api-istio"]["api1"]},
-    "body": "Hello World!",
-    "http_status": 200
-}
-
+# API whitelist check
 allow = success {
     apiWhitelistMatch
 }
-
 failed := {
     "allowed" : false,
     "http_status": 403,
     "body": "apiWhitelistMatch failed"
 }
-
 deny = failed {
     not healthCheck
     not apiWhitelistMatch
 }
-
 apiWhitelistMatch {
     trace("Here!!!")
     trace(sprintf("path: %s", [http_request.path]))
@@ -73,10 +55,4 @@ apiWhitelistMatch {
     client := acl.whitelist[_]
     trace(sprintf("client: %v, source: %v", [client, source.principal]))
     client == source.principal
-}
-
-namespace_filter[policies] {
-    policies := data.kubernetes.graphqlpolicies[ns]
-    trace(sprintf("namespace: %s", [ns]))
-    ns == "api-istio"
 }
