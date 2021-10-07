@@ -6,7 +6,6 @@ metadata:
   labels:
     api-id: api1
 spec:
-  api_id: "api1"
   acls:
   - kind: API
     whitelist:

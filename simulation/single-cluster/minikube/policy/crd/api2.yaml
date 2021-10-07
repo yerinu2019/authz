@@ -5,25 +5,27 @@ metadata:
   labels:
     api-id: api2
 spec:
-  api_id: "api2"
   acls:
   - kind: API
     whitelist:
     - spiffe://cluster.local/ns/clientns/sa/client2
     - spiffe://cluster.local/ns/clientns/sa/client3
-    blacklist:
-    - client4
-  - kind: QUERY
-    whitelist:
-    - client2
-  - kind: MUTATE
-    whitelist:
-    - client2
-  - kind: FIELD_GROUP
-    name: fieldgroup1
+    - spiffe://cluster.local/ns/clientns/sa/client4
+  - kind: MUTATE_FIELDS
     fields:
     - field1
     - field2
     whitelist:
-    - client1
-    - client2
+    - spiffe://cluster.local/ns/clientns/sa/client3
+  - kind: MUTATE_FIELDS
+    fields:
+      - field2
+      - field3
+    whitelist:
+      - spiffe://cluster.local/ns/clientns/sa/client4
+  - kind: MUTATE_FIELDS
+    fields:
+      - field3
+      - field4
+    whitelist:
+      - spiffe://cluster.local/ns/clientns/sa/client2

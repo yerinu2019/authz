@@ -105,9 +105,6 @@ mock_policies =
       "spec": {
         "acls": [
           {
-            "blacklist": [
-              "client4"
-            ],
             "kind": "API",
             "whitelist": [
               "spiffe://cluster.local/ns/clientns/sa/client2",
@@ -115,27 +112,33 @@ mock_policies =
             ]
           },
           {
-            "kind": "QUERY",
-            "whitelist": [
-              "client2"
-            ]
-          },
-          {
-            "kind": "MUTATE",
-            "whitelist": [
-              "client2"
-            ]
-          },
-          {
             "fields": [
               "field1",
               "field2"
             ],
-            "kind": "FIELD_GROUP",
-            "name": "fieldgroup1",
+            "kind": "MUTATE_FIELDS",
             "whitelist": [
-              "client1",
-              "client2"
+              "spiffe://cluster.local/ns/clientns/sa/client3",
+            ]
+          },
+          {
+            "fields": [
+              "field2",
+              "field3"
+            ],
+            "kind": "MUTATE_FIELDS",
+            "whitelist": [
+              "spiffe://cluster.local/ns/clientns/sa/client4",
+            ]
+          },
+          {
+            "fields": [
+              "field3",
+              "field4"
+            ],
+            "kind": "MUTATE_FIELDS",
+            "whitelist": [
+              "spiffe://cluster.local/ns/clientns/sa/client2",
             ]
           }
         ],
@@ -328,9 +331,234 @@ test_client1_to_api2_denied {
 }
 
 test_client2_to_api2_allowed {
-    allow with input as input_c2_to_a2 with data.kubernetes.graphqlpolicies as mock_policies
+    result := allow with input as input_c2_to_a2 with data.kubernetes.graphqlpolicies as mock_policies
+    result == {
+        "allowed": true,
+        "http_status": 200,
+        "headers": {
+            "X-CANT-MUTATE": "field1,field2"
+        }
+    }
 }
 
+test_gql_mutate {
+    mutateFieldBlacklist == {"f1", "f2.f3"}
+}
+
+test_api_policy {
+    api_policy == {"acls": [{"kind": "API", "whitelist": ["c1", "c3"]}]}
+    with input as {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "acls": [
+                    {"kind": "API", "whitelist": ["c1", "c3"]}
+                ]
+            },
+            "api2": {
+                "acls": [
+                    {"kind": "API", "whitelist": ["c2", "c3"]}
+                ]
+            }
+        }
+    }
+}
+
+test_api_acl {
+    api_acl == {"kind": "API", "whitelist": ["c1", "c2"]}
+    with input as
+    {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "spec": {
+                    "acls": [
+                        {"kind": "API", "whitelist": ["c1", "c2"]},
+                        {"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c3","c4"]}
+                    ]
+                }
+            }
+        }
+    }
+}
+
+test_mutate_fields_acl {
+    mutate_fields_acl == {{"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c3","c4"]}}
+    with input as
+    {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "spec": {
+                    "acls": [
+                        {"kind": "API", "whitelist": ["c1", "c2"]},
+                        {"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c3","c4"]}
+                    ]
+                }
+            }
+        }
+    }
+}
+
+test_whitelisted {
+    acl := {"kind": "MUTATE_FIELDS", "whitelist": ["c1", "c2"]}
+    whitelisted(acl)
+    with input as {
+        "attributes": {
+            "source": {
+                "principal": "c1"
+            }
+        }
+    }
+}
+
+test_cant_mutate_fields {
+    fields := cant_mutate_fields
+    with input as
+    {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            },
+            "source": {
+                "principal": "c1"
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "spec": {
+                    "acls": [
+                        {"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c3","c4"]}
+                    ]
+                }
+            }
+        }
+    }
+    trace(sprintf("fields: %v", [fields]))
+    fields == {"f1", "f2"}
+}
+
+test_multiple_cant_mutate_fields_acl {
+    fields := cant_mutate_fields
+    with input as
+    {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            },
+            "source": {
+                "principal": "c1"
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "spec": {
+                    "acls": [
+                        {"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c3","c4"]},
+                        {"kind": "MUTATE_FIELDS", "fields": ["f2", "f3"], "whitelist": ["c3","c4"]},
+                    ]
+                }
+            }
+        }
+    }
+    trace(sprintf("fields: %v", [fields]))
+    fields == {"f1", "f2", "f3"}
+}
+
+test_multiple_can_mutate_fields_acl {
+    fields := can_mutate_fields
+    with input as
+    {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            },
+            "source": {
+                "principal": "c1"
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "spec": {
+                    "acls": [
+                        {"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c1","c4"]},
+                        {"kind": "MUTATE_FIELDS", "fields": ["f2", "f3"], "whitelist": ["c1","c4"]},
+                    ]
+                }
+            }
+        }
+    }
+    trace(sprintf("fields: %v", [fields]))
+    fields == {"f1", "f2", "f3"}
+}
+
+test_cant_mutate_minus_can_mutate {
+    fields := cant_mutate_minus_can_mutate_fields
+    with input as
+    {
+        "attributes": {
+            "request": {
+                "http": {
+                    "host": "api1.api-istio"
+                }
+            },
+            "source": {
+                "principal": "c1"
+            }
+        }
+    }
+    with data.kubernetes.graphqlpolicies as {
+        "api-istio": {
+            "api1": {
+                "spec": {
+                    "acls": [
+                        {"kind": "MUTATE_FIELDS", "fields": ["f1", "f2"], "whitelist": ["c4","c4"]},
+                        {"kind": "MUTATE_FIELDS", "fields": ["f2", "f3"], "whitelist": ["c3","c4"]},
+                        {"kind": "MUTATE_FIELDS", "fields": ["f3", "f4"], "whitelist": ["c1", "c4"]}
+                    ]
+                }
+            }
+        }
+    }
+    trace(sprintf("fields: %v", [fields]))
+    fields == {"f1", "f2"}
+}
 
 test_emptyPolicy_denied {
     deny with data.kubernetes.graphqlpolicies as {}
