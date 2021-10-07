@@ -7,14 +7,19 @@ metadata:
   name: opa-istio-config
 data:
   config.yaml: |
-    services:
-      - name: gcs
-        url: https://storage.googleapis.com/test-opa-policy-bundles
-    bundles:
-      istio/authz:
-        service: gcs
-        resource: bundle.tar.gz
-        persist: false
+    # services:
+      #- name: gcs
+      #  url: https://storage.googleapis.com/test-opa-policy-bundles
+      #  credentials:
+      #    gcp_metadata:
+      #      scopes:
+    #          - https://www.googleapis.com/auth/devstorage.read_only
+    #bundles:
+    #  istio/authz:
+    #    service: gcs
+    #    # NOTE ?alt=media is required
+    #    resource: bundle.tar.gz?alt=media'
+    #    persist: true
     plugins:
       envoy_ext_authz_grpc:
         addr: :9191

@@ -9,18 +9,16 @@ spec:
   acls:
   - kind: API
     whitelist:
-    - client1
-    - client2
-    - client3
+    - spiffe://cluster.local/ns/clientns/sa/client2
+    - spiffe://cluster.local/ns/clientns/sa/client3
     blacklist:
     - client4
   - kind: QUERY
     whitelist:
-    - client1
     - client2
   - kind: MUTATE
     whitelist:
-    - client1
+    - client2
   - kind: FIELD_GROUP
     name: fieldgroup1
     fields:

@@ -10,6 +10,5 @@ spec:
   acls:
   - kind: API
     whitelist:
-    - client1
-    - client2
-    - client3
+    - spiffe://cluster.local/ns/clientns/sa/client1
+    - spiffe://cluster.local/ns/clientns/sa/client3

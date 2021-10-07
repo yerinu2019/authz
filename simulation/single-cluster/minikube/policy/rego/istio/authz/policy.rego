@@ -1,60 +1,82 @@
 package istio.authz
 
 import input.attributes.request.http as http_request
+import input.attributes.source
 import input.parsed_path
+import data.kubernetes.graphqlpolicies
 
-default allow = false
+#default allow[resp] =  {
+#		  "allowed": false,
+#		  "headers": {"KEY1", "VALUE1"},
+#		  "body": "Body from default",
+#		  "http_status": 403
+#		}
+#success := true
+success := {
+    "allowed": true,
+    "headers": {"X-Hello": "World"},
+    "body": "XXXXXXXXX Hello World !!!!!!!",
+    "http_status": 200
+}
 
-# Allow health-checks
-# NOTE:
-# Without health check rules, opa admission controller
-# container fails to start.
-allow {
-    split(http_request.host, ":")[1] == "8282"
+allow = success {
+   healthCheck
 }
-allow {
-    split(http_request.host, ":")[1] == "15021"
-}
-allow {
+
+healthCheck {
     parsed_path[0] == "health"
     http_request.method == "GET"
 }
-allow {
+healthCheck {
     parsed_path[0] == "healthz"
     http_request.method == "GET"
 }
 
-# XFCC header based access control
-# NOTE:
-# Logically, it looks like the following rule is enough, but it does NOT.
-# allow {
-#   contains(input.attributes.request.http.headers["x-forwarded-client-cert"], api_whitelist[_])
-# }
-# api_whitelist = ["spiffe://cluster.local/ns/clientns/sa/client1",
-#  "spiffe://cluster.local/ns/clientns/sa/client3",
-# ]
-#
-# The above rule works in standalone rego file based evaluation, but does NOT works
-# in ConfigMap in opa envoy plugin.
-# The above simple clean and short rule had to be rewritten as follows.
-# Rules that work in OPA envoy plugin unit test do not work in the runtime environment.
-# So be careful when refactoring the following rules. Do manual test with small changes.
-allow = response {
-    response := {
-      "allowed": checkXfcc,
-    }
+debug := {
+    "allowed": true,
+    "headers": {"X-Policies": sprintf("%s", [data.kubernetes.graphqlpolicies]),
+       "X-inputapi": substring(http_request.host, 0, indexof(http_request.host, ".")),
+       "X-Api1-Policy": data.kubernetes.graphqlpolicies["api-istio"]["api1"]},
+    "body": "Hello World!",
+    "http_status": 200
 }
 
-deny = response {
-    response := {
-    "allowed": checkXfcc,
-    }
+allow = success {
+    apiWhitelistMatch
 }
 
-checkXfcc {
-  contains(input.attributes.request.http.headers["x-forwarded-client-cert"], api_whitelist[_])
+failed := {
+    "allowed" : false,
+    "http_status": 403,
+    "body": "apiWhitelistMatch failed"
 }
 
-api_whitelist = ["spiffe://cluster.local/ns/clientns/sa/client1",
-  "spiffe://cluster.local/ns/clientns/sa/client3",
-]
+deny = failed {
+    not healthCheck
+    not apiWhitelistMatch
+}
+
+apiWhitelistMatch {
+    trace("Here!!!")
+    trace(sprintf("path: %s", [http_request.path]))
+    trace(sprintf("source: %s", [source.principal]))
+    http_request.path == "/"
+    policies := data.kubernetes.graphqlpolicies["api-istio"]
+    input_api := substring(http_request.host, 0, indexof(http_request.host, "."))
+    trace(sprintf("input api:%s", [input_api]))
+    policy := policies[input_api]
+    trace(sprintf("api:%s, policy: %s", [input_api, policy]))
+
+    acl := policy.spec.acls[_]
+    acl.kind == "API"
+
+    client := acl.whitelist[_]
+    trace(sprintf("client: %v, source: %v", [client, source.principal]))
+    client == source.principal
+}
+
+namespace_filter[policies] {
+    policies := data.kubernetes.graphqlpolicies[ns]
+    trace(sprintf("namespace: %s", [ns]))
+    ns == "api-istio"
+}

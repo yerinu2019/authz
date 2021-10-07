@@ -4,4 +4,4 @@ minikube stop
 minikube delete
 
 echo "Create minikube clusters"
-minikube start --driver docker --memory 16384 --cpus 4
+minikube start --driver docker --memory 16000 --cpus 4
