@@ -19,8 +19,8 @@ echo "Install kubemgmt"
 kubectl -n api-istio apply -f policy/kube-mgmt/load.yaml
 
 echo "Install crd policies"
-kubectl -n api-istio apply -f policy/crd/api1.yaml
-kubectl -n api-istio apply -f policy/crd/api2.yaml
+kubectl -n api-istio apply -f policy/crd/api1/acl.yaml
+kubectl -n api-istio apply -f policy/crd/api2/acl.yaml
 
 echo "Install OPA-Envoy"
 kubectl apply -f auth-plugin.yaml
