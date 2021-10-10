@@ -12,6 +12,16 @@ kubectl create namespace opa-istio
 echo "Install OPA envoy filter"
 kubectl -n istio-system apply -f opa-envoy-filter.yaml
 
+echo "Install policy crd"
+kubectl -n api-istio apply -f policy/crd/crd.yaml
+
+echo "Install kubemgmt"
+kubectl -n api-istio apply -f policy/kube-mgmt/load.yaml
+
+echo "Install crd policies"
+kubectl -n api-istio apply -f policy/crd/api1/acl.yaml
+kubectl -n api-istio apply -f policy/crd/api2/acl.yaml
+
 echo "Install OPA-Envoy"
 kubectl apply -f auth-plugin.yaml
 

@@ -130,6 +130,10 @@ data:
       "value": opa_container,
     }, {
       "op": "add",
+      "path": "/spec/containers/-",
+      "value": kubemgmt_container,
+    }, {
+      "op": "add",
       "path": "/spec/volumes/-",
       "value": opa_config_volume,
     }, {
@@ -137,6 +141,16 @@ data:
       "path": "/spec/volumes/-",
       "value": opa_policy_volume,
     }]
+
+    kubemgmt_container = {
+      "name": "kube-mgmt",
+      "image": "openpolicyagent/kube-mgmt:latest",
+      "args": [
+          "--policies=api-istio",
+          "--enable-data",
+          "--replicate=example.com/v1alpha1/graphqlpolicies"
+      ],
+    }
 
     opa_container = {
       "image": "yerinu2019/test-auth-plugin:latest-istio",
@@ -146,8 +160,11 @@ data:
         "--server",
         "--config-file=/config/config.yaml",
         "--addr=localhost:8181",
+        "--log-level=error",
+        #"--h2c",
+        "--log-format=json-pretty",
+        "--set=decision_logs.console=true",
         "--diagnostic-addr=0.0.0.0:8282",
-        "/policy/policy.rego",
       ],
       "volumeMounts": [{
         "mountPath": "/config",
@@ -177,7 +194,6 @@ data:
 
     opa_policy_volume = {
       "name": "opa-policy",
-      "configMap": {"name": "opa-policy"},
     }
 ---
 ############################################################

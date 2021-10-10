@@ -2,13 +2,13 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   # name must match the spec fields below, and be in the form: <plural>.<group>
-  name: accesspolicies.graphql.usbank.com
+  name: graphqlpolicies.example.com
 spec:
   # group name to use for REST API: /apis/<group>/<version>
-  group: graphql.usbank.com
+  group: example.com
   # list of versions supported by this CustomResourceDefinition
   versions:
-    - name: v1alpha
+    - name: v1alpha1
       # Each version can be enabled/disabled by Served flag.
       served: true
       # One and only one version must be marked as the storage version.
@@ -20,12 +20,6 @@ spec:
             spec:
               type: object
               properties:
-                # osl data api identifier. consider copy to label
-                api_id:
-                  description: OSL Data API identifier. Must be equal to API identifer
-                    that can be extracted from the request to the Data API. (e.g. in 
-                    url or in request header(token attribute or client certificate))
-                  type: string
                 acls:
                   description: List of ACLs supported by this Data API.
                     Should have exactly one API ACL.
@@ -38,16 +32,10 @@ spec:
                     properties:
                       kind:
                         description: Specifies ACL type.
-                          Valid values are API, QUERY, MUTATE, FIELD_GROUP
+                          Valid values are API, MUTATE_FIELDS
                         enum:
                         - API
-                        - QUERY
-                        - MUTATE
-                        - FIELD_GROUP
-                        type: string
-                      name:
-                        description: Query name when kind is QUERY. Mutate name when
-                          kind is MUTATE. Field group name when kind is FIELD_GROUP.
+                        - MUTATE_FIELDS
                         type: string
                       fields:
                         description: Field names when kind if FIELD_GROUP.
@@ -65,22 +53,15 @@ spec:
                         type: array
                         items:
                           type: string
-                      blacklist:
-                        description: List of service accounts that should not access
-                          the resource of this ACL. The blacklist members are
-                          supposed to be added by the API owner
-                        type: array
-                        items:
-                          type: string
   # either Namespaced or Cluster
   scope: Namespaced
   names:
     # plural name to be used in the URL: /apis/<group>/<version>/<plural>
-    plural: accesspolicies
+    plural: graphqlpolicies
     # singular name to be used as an alias on the CLI and for display
-    singular: accesspolicy
+    singular: graphqlpolicy
     # kind is normally the CamelCased singular type. Your resource manifests use this.
-    kind: AccessPolicy
+    kind: GraphqlPolicy
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - ap    
