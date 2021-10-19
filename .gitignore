@@ -1,1 +1,5 @@
 *.gz
+*.iml
+*.code-workspace
+.idea/*
+.DS_Store
