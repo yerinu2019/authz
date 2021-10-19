@@ -8,17 +8,17 @@ do
     echo "create directory ${api}"
     mkdir $api
   fi
-  #echo "create file ${api}/acl.yaml"
+  echo "create file ${api}/acl.yaml"
   left=25
   right=50
   low=$((num - left))
   low=$((low>0 ? low : 1))
   high=$((low+right))
-  clients=""
+  client=""
   enter=$'\n'
   for clientnum in $(seq $low $high);
   do
-    tmp="    - spiffe://cluster.local/ns/clientns/sa/client1${clientnum}${enter}"
+    tmp="    - spiffe://cluster.local/ns/clientns/sa/client${clientnum}${enter}"
     client=$client$tmp
   done
 cat > ${api}/acl.yaml << EOF
