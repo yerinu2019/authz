@@ -1,0 +1,40 @@
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2853	    425045 ns/op	    415522 timer_rego_query_eval_ns/op	  207674 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7825	    157290 ns/op	    149477 timer_rego_query_eval_ns/op	   88164 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2990	    414075 ns/op	    404988 timer_rego_query_eval_ns/op	  207637 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7922	    167125 ns/op	    158579 timer_rego_query_eval_ns/op	   88169 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2937	    413712 ns/op	    404608 timer_rego_query_eval_ns/op	  207651 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    8067	    158250 ns/op	    150317 timer_rego_query_eval_ns/op	   88158 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2971	    421247 ns/op	    411816 timer_rego_query_eval_ns/op	  207623 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7988	    157294 ns/op	    149499 timer_rego_query_eval_ns/op	   88156 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2672	    425356 ns/op	    415750 timer_rego_query_eval_ns/op	  207637 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7801	    164747 ns/op	    156372 timer_rego_query_eval_ns/op	   88154 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2854	    417454 ns/op	    408397 timer_rego_query_eval_ns/op	  207635 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7918	    158684 ns/op	    150772 timer_rego_query_eval_ns/op	   88156 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2780	    415859 ns/op	    406881 timer_rego_query_eval_ns/op	  207625 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7789	    161472 ns/op	    153212 timer_rego_query_eval_ns/op	   88150 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2830	    421230 ns/op	    411841 timer_rego_query_eval_ns/op	  207636 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7476	    160116 ns/op	    152088 timer_rego_query_eval_ns/op	   88144 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2856	    417768 ns/op	    408495 timer_rego_query_eval_ns/op	  207599 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7602	    161427 ns/op	    153461 timer_rego_query_eval_ns/op	   88146 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
+BenchmarkDataIstioAuthzTestClient1ToApi1Allowed	    2782	    421564 ns/op	    412338 timer_rego_query_eval_ns/op	  207605 B/op	    3217 allocs/op
+BenchmarkDataIstioAuthzTestCantMutateFields	    7557	    160394 ns/op	    152504 timer_rego_query_eval_ns/op	   88147 B/op	    1146 allocs/op
+--------------------------------------------------------------------------------
+PASS: 2/2
