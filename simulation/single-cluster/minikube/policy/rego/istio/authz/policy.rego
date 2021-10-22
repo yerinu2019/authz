@@ -5,15 +5,12 @@ import input.attributes.source
 import input.parsed_path
 import data.kubernetes.graphqlpolicies
 
-success := {
-    "allowed": true,
-    "headers": {"X-Hello": "World"},
-    "body": "XXXXXXXXX Hello World !!!!!!!",
-    "http_status": 200
-}
-
 # Allow health check
-allow = success {
+allow = {
+    "allowed": true,
+    "headers": {"X-Suppress-Decision-Log": "true"},
+    "http_status": 200
+} {
    healthCheck
 }
 healthCheck {
