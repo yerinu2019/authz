@@ -8,7 +8,7 @@ import data.kubernetes.graphqlpolicies
 # Allow health check
 allow = {
     "allowed": true,
-    "headers": {"X-Suppress-Decision-Log": "true"},
+    "suppress_decision_log": true,
     "http_status": 200
 } {
    healthCheck
