@@ -3,7 +3,9 @@ package istio.authz
 import input.attributes.request.http as http_request
 import input.attributes.source
 import input.parsed_path
+import input.parsed_body
 import data.kubernetes.graphqlpolicies
+import data.system.log.mask
 
 # Allow health check
 allow = {
@@ -26,7 +28,7 @@ healthCheck {
 allow = {
     "allowed": true,
     "http_status": 200,
-    "headers": {"X-CANT-MUTATE": concat(",", cant_mutate_minus_can_mutate_fields)}
+    "headers": {"X-CANT-MUTATE": concat(",", cant_mutate_minus_can_mutate_fields)},
 } {
     apiWhitelistMatch
 }

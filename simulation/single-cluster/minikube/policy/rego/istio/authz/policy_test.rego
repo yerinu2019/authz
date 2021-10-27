@@ -271,7 +271,7 @@ input_c2_to_a2 :=
     }
   },
   "parsed_body": {
-    "query": "query{showCollection {items {title firstEpisodeDate lastEpisodeDate henshinMp4 { url }}}}"
+    "query": "mutation{showCollection {items {title firstEpisodeDate lastEpisodeDate henshinMp4 { url }}}}"
   },
   "parsed_path": [
     ""
@@ -332,12 +332,13 @@ test_client1_to_api2_denied {
 
 test_client2_to_api2_allowed {
     result := allow with input as input_c2_to_a2 with data.kubernetes.graphqlpolicies as mock_policies
+    trace(sprintf("result: %v", [result]))
     result == {
         "allowed": true,
         "http_status": 200,
         "headers": {
             "X-CANT-MUTATE": "field1,field2"
-        }
+        },
     }
 }
 

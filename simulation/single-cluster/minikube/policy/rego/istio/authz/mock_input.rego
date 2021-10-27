@@ -1,6 +1,6 @@
 package istio.authz
 
-client1_to_api1 :=
+perf_client1_to_api1 :=
 {
   "attributes": {
     "destination": {
@@ -68,7 +68,7 @@ client1_to_api1 :=
   }
 }
 
-client2_to_api1 :=
+perf_client2_to_api1 :=
 {
   "attributes": {
     "destination": {
@@ -136,7 +136,7 @@ client2_to_api1 :=
   }
 }
 
-client100_to_api1 :=
+perf_client100_to_api1 :=
 {
   "attributes": {
     "destination": {
@@ -204,7 +204,7 @@ client100_to_api1 :=
   }
 }
 
-healthcheck := {
+perf_healthcheck := {
         "attributes": {
           "destination": {
             "address": {
