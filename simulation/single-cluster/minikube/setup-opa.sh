@@ -25,6 +25,9 @@ kubectl -n api-istio apply -f policy/crd/api2/acl.yaml
 echo "Install OPA-Envoy"
 kubectl apply -f auth-plugin.yaml
 
+echno "Install Egress Gateway"
+kubectl -n api-istio apply -f egress.yaml
+
 echo "Install OPA configmap on api-istio namespace"
 kubectl -n api-istio apply -f opa-configmap.yaml
 
