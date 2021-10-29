@@ -530,7 +530,7 @@ test_multiple_can_mutate_fields_acl {
 }
 
 test_cant_mutate_minus_can_mutate {
-    fields := cant_mutate_minus_can_mutate_fields
+    fields := cant_mutate_fields - can_mutate_fields
     with input as
     {
         "attributes": {

@@ -28,16 +28,17 @@ healthCheck {
 allow = {
     "allowed": true,
     "http_status": 200,
-    "headers": {"X-CANT-MUTATE": concat(",", cant_mutate_minus_can_mutate_fields)},
+    "headers": {"X-CANT-MUTATE": concat(",", cant_mutate_fields - can_mutate_fields)},
+    "mask": mask,
 } {
     apiWhitelistMatch
 }
-failed := {
+
+deny = {
     "allowed" : false,
     "http_status": 403,
     "body": "apiWhitelistMatch failed"
-}
-deny = failed {
+} {
     not healthCheck
     not apiWhitelistMatch
 }
@@ -83,7 +84,7 @@ cant_mutate_fields[fields] {
     trace(sprintf("fields: %v", [fields]))
 }
 
-cant_mutate_minus_can_mutate_fields := cant_mutate_fields - can_mutate_fields
+#cant_mutate_minus_can_mutate_fields := cant_mutate_fields - can_mutate_fields
 
 whitelisted(acl) {
     trace(sprintf("source: %v, acl: %v", [source.principal, acl]))

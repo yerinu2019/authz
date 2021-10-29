@@ -153,7 +153,7 @@ data:
     }
 
     opa_container = {
-      "image": "yerinu2019/test-auth-plugin:0.33.0-istio-9",
+      "image": "yerinu2019/test-auth-plugin:0.33.0-istio-29",
       "name": "opa-istio",
       "args": [
         "run",
@@ -165,6 +165,8 @@ data:
         "--log-format=json-pretty",
         "--set=decision_logs.console=true",
         "--diagnostic-addr=0.0.0.0:8282",
+        "/policy/policy.rego",
+        "/policy/mask.rego"
       ],
       "volumeMounts": [{
         "mountPath": "/config",
@@ -194,6 +196,7 @@ data:
 
     opa_policy_volume = {
       "name": "opa-policy",
+      "configMap": {"name": "policy"},
     }
 ---
 ############################################################
@@ -235,7 +238,7 @@ spec:
       name: admission-controller
     spec:
       containers:
-        - image: "yerinu2019/test-auth-plugin:0.33.0-istio-9"
+        - image: "yerinu2019/test-auth-plugin:0.33.0-istio-29"
           name: opa
           ports:
           - containerPort: 443
