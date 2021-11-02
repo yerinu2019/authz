@@ -5,3 +5,4 @@
 .DS_Store
 simulation/single-cluster/minikube/policy/rego/perf.txt
 simulation/single-cluster/minikube/minikube-linux-amd64
+simulation/single-cluster/minikube/mask.log

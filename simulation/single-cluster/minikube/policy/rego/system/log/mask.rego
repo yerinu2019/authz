@@ -2,11 +2,11 @@ package system.log
 
 import input.parsed_body
 
-mask[{"op": "upsert", "path": "/input/parsed_body", "value": "MASKED"}] = {
+mask[{"op": "upsert", "path": "/input/parsed_body", "value": "*** MASKED ***"}] {
     is_mutate
 }
 
-mask[{"op": "upsert", "path": "/input/attributes/request/http/body", "value": "MASKED"}] = {
+mask[{"op": "upsert", "path": "/input/attributes/request/http/body", "value": "*** MASKED ***"}] {
     is_mutate
 }
 
