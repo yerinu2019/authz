@@ -34,10 +34,11 @@ allow = {
     apiWhitelistMatch
 }
 
-deny = {
+allow = {
     "allowed" : false,
     "http_status": 403,
-    "body": "apiWhitelistMatch failed"
+    "body": "apiWhitelistMatch failed",
+    "mask": mask,
 } {
     not healthCheck
     not apiWhitelistMatch
