@@ -310,7 +310,7 @@ test_client2_to_api1_denied {
 }
 
 test_client1_to_api2_denied {
-    deny with input as {
+    not allow with input as {
         "attributes": {
                   "request": {
                     "http": {
@@ -562,7 +562,7 @@ test_cant_mutate_minus_can_mutate {
 }
 
 test_emptyPolicy_denied {
-    deny with data.kubernetes.graphqlpolicies as {}
+    not allow with data.kubernetes.graphqlpolicies as {}
 }
 
 test_health_check_allowed {
