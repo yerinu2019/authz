@@ -339,8 +339,8 @@ test_client2_to_api2_allowed {
         "headers": {
             "X-CANT-MUTATE": "field1,field2"
         },
-        "mask": [{"op": "upsert", "path": "/input/parsed_body", "value": "*** MASKED ***"},
-          {"op": "upsert", "path": "/input/attributes/request/http/body", "value": "*** MASKED ***"}]
+        "mask": {{"op": "upsert", "path": "/input/parsed_body", "value": "*** MASKED ***"},
+          {"op": "upsert", "path": "/input/attributes/request/http/body", "value": "*** MASKED ***"}}
     }
 }
 
