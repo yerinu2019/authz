@@ -289,7 +289,7 @@ test_client1_to_api1_allowed {
 }
 
 test_client2_to_api1_denied {
-    deny with input as {
+    not allow with input as {
         "attributes": {
                   "request": {
                     "http": {
